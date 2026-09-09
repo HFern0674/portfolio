@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>产品分析向导</title>
+<style>
+  :root {
+    --primary: #5b6cff;
+    --primary-dark: #4455d9;
+    --bg: #f6f7fb;
+    --card: #ffffff;
+    --text: #2b2f3a;
+    --text-light: #6b7180;
+    --border: #e6e8f0;
+    --accent: #ff7a59;
+    --green: #2eb872;
+    --soft: #fbfbfe;
+    --example-bg: #fff9f2;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    padding-bottom: 60px;
+  }
+  .header {
+    background: linear-gradient(135deg, #5b6cff 0%, #7b5bff 100%);
+    color: #fff;
+    padding: 40px 24px 36px;
+    text-align: center;
+  }
+  .header h1 { font-size: 26px; font-weight: 700; letter-spacing: 1px; }
+  .header p { margin-top: 10px; font-size: 14px; opacity: 0.93; }
+  .container { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+
+  /* 开场 */
+  .intro-card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 30px 28px;
+    margin-top: -22px;
+    box-shadow: 0 8px 30px rgba(43,47,58,0.08);
+  }
+  .intro-card .desc { font-size: 15px; color: var(--text); margin-bottom: 8px; }
+  .intro-card .desc small { color: var(--text-light); font-size: 13px; }
+  .field { margin: 20px 0; }
+  .field label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+  .field input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--text);
+  }
+  .field input:focus { outline: none; border-color: var(--primary); }
+  .btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 2px;
+    transition: background .2s;
+  }
+  .btn:hover { background: var(--primary-dark); }
+  .btn.ghost {
+    background: #fff;
+    color: var(--primary);
+    border: 1.5px solid var(--primary);
+  }
+  .btn.ghost:hover { background: #f0f1ff; }
+
+  /* 向导 */
+  .wizard { display: none; margin-top: -22px; }
+  .progress-wrap {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 16px rgba(43,47,58,0.06);
+  }
+  .progress-text { font-size: 13px; color: var(--text-light); margin-bottom: 10px; }
+  .progress-text b { color: var(--primary); }
+  .progress-bar { height: 8px; background: #eef0f7; border-radius: 4px; overflow: hidden; }
+  .progress-bar .fill { height: 100%; background: var(--primary); border-radius: 4px; transition: width .3s; }
+
+  .step-card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 26px 24px;
+    box-shadow: 0 4px 16px rgba(43,47,58,0.06);
+  }
+  .step-title { font-size: 19px; font-weight: 700; margin-bottom: 4px; }
+  .step-sub { font-size: 13px; color: var(--text-light); margin-bottom: 18px; }
+
+  .sec-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: 1px;
+    margin: 18px 0 8px;
+    text-transform: uppercase;
+  }
+  .sec-label:first-of-type { margin-top: 0; }
+  .sec-text { font-size: 14.5px; }
+
+  .example {
+    background: var(--example-bg);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-top: 8px;
+    font-size: 14px;
+    color: #7a5230;
+  }
+  .example .ex-title { font-weight: 700; color: #b0602a; margin-bottom: 6px; }
+  .example ul { margin: 6px 0 0 18px; }
+  .example li { margin-bottom: 4px; }
+
+  .textarea {
+    width: 100%;
+    min-height: 110px;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-size: 14.5px;
+    font-family: inherit;
+    color: var(--text);
+    resize: vertical;
+    margin-top: 8px;
+  }
+  .textarea:focus { outline: none; border-color: var(--primary); }
+
+  .nav {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .nav .btn { flex: 1; }
+
+  /* 结果 */
+  .result { display: none; margin-top: -22px; }
+  .draft-box {
+    position: relative;
+    background: #2b2f3a;
+    color: #e8eaf0;
+    border-radius: 14px;
+    padding: 22px;
+    font-size: 14px;
+    white-space: pre-wrap;
+    word-break: break-all;
+    line-height: 1.8;
+    margin-top: 16px;
+  }
+  .copy-btn {
+    position: absolute;
+    top: 12px; right: 12px;
+    padding: 7px 16px;
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .copy-btn:hover { background: rgba(255,255,255,0.3); }
+  .copy-btn.copied { background: var(--green); }
+
+  .footer {
+    text-align: center;
+    margin-top: 36px;
+    font-size: 12px;
+    color: var(--text-light);
+  }
+</style>
+</head>
+<body>
+  <div class="header">
+    <h1>产品分析向导</h1>
+    <p>给第一次做 AI 产品分析的人 —— 跟着走完，得到一份你自己的分析初稿</p>
+  </div>
+
+  <div class="container">
+    <!-- 开场 -->
+    <div class="intro-card" id="intro">
+      <div class="desc">
+        这是一个<strong>向导</strong>，不是教程。它会带着你一步步走完一次竞品分析，<br>
+        每一步告诉你<b>为什么</b>、<b>怎么做</b>，还给你看一个<b>真实例子</b>。<br>
+        你跟着填空，最后它会帮你串成<strong>一份分析初稿</strong>。
+      </div>
+      <div class="desc"><small>（下面这个产品名，填了会写进你的初稿标题里，不填也能开始）</small></div>
+      <div class="field">
+        <label>我要分析的产品名</label>
+        <input type="text" id="productName" placeholder="例如：淘宝AI购物助手、秘塔AI搜索">
+      </div>
+      <button class="btn" onclick="startWizard()">开始分析</button>
+    </div>
+
+    <!-- 向导 -->
+    <div class="wizard" id="wizard">
+      <div class="progress-wrap">
+        <div class="progress-text">第 <b id="curNum">1</b> 步 / 共 <span id="totalNum">7</span> 步</div>
+        <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
+      </div>
+      <div class="step-card">
+        <div class="step-title" id="stepTitle"></div>
+        <div class="step-sub" id="stepSub"></div>
+
+        <div class="sec-label">为什么</div>
+        <div class="sec-text" id="why"></div>
+
+        <div class="sec-label">怎么做</div>
+        <div class="sec-text" id="how"></div>
+
+        <div class="sec-label">一个真实例子</div>
+        <div class="example" id="example"></div>
+
+        <div class="sec-label">现在，写你的</div>
+        <textarea class="textarea" id="stepInput" placeholder=""></textarea>
+
+        <div class="nav">
+          <button class="btn ghost" id="prevBtn" onclick="prevStep()" style="display:none;">上一步</button>
+          <button class="btn" id="nextBtn" onclick="nextStep()">下一步</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 结果 -->
+    <div class="result" id="result">
+      <div class="step-card">
+        <div class="step-title">你的分析初稿好了 👇</div>
+        <div class="step-sub">这是你一步步填出来的，可以直接复制走，继续补充成完整的分析。</div>
+        <div class="draft-box" id="draftBox"><button class="copy-btn" onclick="copyDraft(this)">复制</button></div>
+        <div class="nav">
+          <button class="btn ghost" onclick="restart()">重新来一次</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">用 Claude Code 独立完成 · 方法论来自我的真实产品分析经验</div>
+  </div>
+
+<script>
+// ===== 步骤数据 =====
+var steps = [
+  {
+    title: "想清楚：你要回答什么问题",
+    sub: "新手最容易犯的错，是「为了分析而分析」。先想清楚问题，你才知道该看什么。",
+    why: "你猛试用产品，最后容易写出一堆功能罗列，却没有结论。带着一个明确的问题去试，你才会自动过滤掉不相关的功能，知道该盯哪里。",
+    how: "先想：这次分析是要支撑一个什么决定？比如「我们要不要做一个类似的功能」「哪个竞品值得学」。然后，把这个决定变成一个具体的问题。",
+    example: "我分析淘宝AI购物助手时，问题是——<br><b>「用户在电商场景下为什么不愿意用AI？AI嵌入成熟产品时怎么避免被用户忽略？」</b><br><br>注意这个问题多具体：不是「淘宝AI怎么样」，而是「用户为什么不用」——这一个问法，就决定了后面我要盯的是「用户的行为习惯」，不是「功能列表」。",
+    placeholder: "我想通过这次分析回答的问题是……（要支撑一个什么决定？）"
+  },
+  {
+    title: "先判断：这是不是真竞品",
+    sub: "如果你分析的是个「伪竞品」，后面的维度、深度、结论全都不一样。",
+    why: "两个产品看起来像（比如都叫「办公+AI」），但用户拿它们干的可能根本不是同一件事。搞错了，整篇分析都会跑偏。",
+    how: "问自己一句：用户拿我要对比的这两个东西，是干<b>同一件事</b>吗？如果干的是不同的事，那它们就不是真竞品，而是「伪竞品」。",
+    example: "我对比 WPS AI 和飞书时，一开始以为它们是直接竞品——都是「办公+AI」。<br>真用下来发现：<b>WPS AI 是「把单个文档做好」，飞书是「把整个协作流程跑顺」</b>，用户拿它们干的不是同一件事。<br>结论：它们不是替代关系，是「伪竞品」。这个判断一出来，后面我分析的角度就全不一样了。",
+    placeholder: "我要对比的是什么 vs 什么？用户拿它们干同一件事吗？（是 / 否，为什么）"
+  },
+  {
+    title: "定范围和深度",
+    sub: "不是每次都要分析到「全」。深度由你的问题决定。",
+    why: "一个快速判断要不要跟进的决策，不需要你把每个功能都挖到底；但一个影响方向的大决策，浅了会害死人。先定深度，省力又不出错。",
+    how: "问自己：这个问题，需要我分析到多细？是快速扫一眼给个判断，还是深挖每个功能、每个场景？",
+    example: "我做的三个分析深度就不同：<br>· <b>秘塔</b>——我要做「深度分析」，所以每个功能、每个模式都测了，还和百度对照。<br>· <b>WPS vs 飞书</b>——我只想回答「谁的方案更贴合工作流」，所以没深挖每个功能，把力气放在「工作流」这一个点上。",
+    placeholder: "我这次要分析到多细？（快速判断 / 中等 / 深挖，为什么）"
+  },
+  {
+    title: "还原用户路径（核心）",
+    sub: "别按产品设计者的思路走，按普通用户的习惯走。这是整个分析的核心。",
+    why: "产品方设计了一条「理想路径」，但用户根本不按它走。你要还原的是<b>用户真实的路径</b>，不是产品说明书。",
+    how: "以一个新用户的身份，从打开产品开始，一步步走。记录：在哪里碰到了 AI 功能？看到了什么？是按什么顺序碰到的？把你走的过程原样写下来。<b>注意：你要还原的是「用户真实的使用路径」，不是「产品功能的展示路径」——这两条线常常不一样，别混了。</b>",
+    example: "我分析淘宝时，还原的是我<b>真实的购物路径</b>（不是 AI 购物助手的功能路径）——<br>点开淘宝首页 → 搜一条连衣裙 → 点进商品页看到「穿上试试」→ 试穿 → 去看用户评价 → 加购 → 结算（优惠自动弹出来）。<br><br>注意：这条真实购物路径里，AI 只出现在「穿上试试」<b>一个地方</b>。<br>（而「AI购物助手」本身，我是从「消息」里点进去才碰到的——那是另一条线，不是我的购物路径。）<br><br>这个发现，就是后面所有结论的起点：<b>用户不会按 AI 的功能设计去走，只会按自己的购物习惯走。</b>",
+    placeholder: "以新用户身份，从打开到完成，我一步步是怎么走的？在哪里碰到了 AI 功能？"
+  },
+  {
+    title: "灵魂4问（看场景）",
+    sub: "判断单个功能对用户有没有用。注意：如果是「多产品对比」，这一步可以跳过。",
+    why: "这 4 问的本质，是判断一个具体的 AI 功能对用户有没有价值——它贴着功能走，比「拆维度」更接近真实。",
+    how: "挑一个你碰到的 AI 功能，问自己 4 个问题：①这个功能是来干什么的？②没有它的时候，我是怎么做的？③有了它，和之前有什么区别？④我会用它替代我原来的办法吗？",
+    example: "我用「灵魂4问」看淘宝的「AI省钱」功能：<br>① 它是来干什么的？→ 帮你找优惠。<br>② 没有它，我是怎么做的？→ 直接结算，优惠券自动弹出来。<br>③ 有了它，和之前有什么区别？→ 多了一个「充值金」提醒，但大部分优惠结算时本来就有。<br>④ 我会用它替代老办法吗？→ <b>不会，画蛇添足。</b><br><br>4 问走完，这个功能有没有价值，一眼就看出来了。",
+    placeholder: "挑一个我碰到的 AI 功能，回答这 4 个问题（①②③④）"
+  },
+  {
+    title: "补场景",
+    sub: "你自己能试到的场景有限，用 AI 帮你补全。",
+    why: "你一个人试用，只能碰到部分场景。AI 能帮你列出更多「适用场景」，你再对照哪些还没试。",
+    how: "问 AI：「这个功能有哪些适用场景？给我完整列一下。」然后拿着清单，对照「哪些我还没试」，把没试的再试一下。<b>记住：AI 说的是第二手信息，只能当线索，最后必须自己上手试。</b>",
+    example: "我分析淘宝时，问豆包「AI购物助手有哪些适用场景」，它列了 <b>7 个</b>。其中 4 个我已经试到了，剩下 3 个是我没想到的：①需求模糊（不知道买什么）②需求确定但选不出 ③一句话下单闭环。<br>这 3 个我没想到的场景，就一个个去补试了——结果试出「一句话下单买瑜伽垫+哑铃，只跳转了哑铃链接」这个 bug。",
+    placeholder: "AI 给我列了哪些适用场景？哪些我还没试？补试的结果是什么？"
+  },
+  {
+    title: "写结论 + 落到自己产品",
+    sub: "用你自己的话下判断，用真实体感做依据。最后问一句：对我有什么用。",
+    why: "分析的最终目的，不是「搞清楚别人家产品怎么样」，而是「指导我们自己的产品怎么做」。所以分析完，必须下一个明确的判断（不能模棱两可），还要说清楚它对你有什么用——没有结论的分析，等于白做。",
+    how: "先用「需求3问」收个尾：用户真有痛点吗？用AI有显著优势吗？用户愿意代办吗？然后下判断。<b>注意：结论用你自己的体感当论据，不要用套话。</b>最后问：这个分析，对我的产品/工作有什么启发？",
+    example: "我的淘宝结论是——<br>需求3问都不成立：痛点不痛、优势不显、用户不愿代办。所以它是「锦上添花」，不是「雪中送炭」。<br>最关键的一句判断：<b>「用户不会按产品设计去做，只会按自己的习惯去做。」</b><br>落到自己：做产品要盯「用户的习惯链路」，而不是「产品自己的链路」。",
+    placeholder: "我的结论是什么（用需求3问检验）？这个分析对我的产品/工作有什么用？"
+  }
+];
+
+// ===== 状态 =====
+var current = 0;
+var answers = {};
+
+// ===== 渲染 =====
+function render() {
+  var s = steps[current];
+  document.getElementById('curNum').textContent = current + 1;
+  document.getElementById('totalNum').textContent = steps.length;
+  document.getElementById('progressFill').style.width = ((current + 1) / steps.length * 100) + '%';
+  document.getElementById('stepTitle').textContent = s.title;
+  document.getElementById('stepSub').textContent = s.sub;
+  document.getElementById('why').innerHTML = s.why;
+  document.getElementById('how').innerHTML = s.how;
+  document.getElementById('example').innerHTML = '<span class="ex-title">真实例子</span>' + s.example;
+  var ta = document.getElementById('stepInput');
+  ta.placeholder = s.placeholder;
+  ta.value = answers[current] || '';
+
+  var prevBtn = document.getElementById('prevBtn');
+  var nextBtn = document.getElementById('nextBtn');
+  prevBtn.style.display = current === 0 ? 'none' : 'block';
+  if (current === steps.length - 1) {
+    nextBtn.textContent = '生成我的分析初稿';
+  } else {
+    nextBtn.textContent = '下一步';
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function startWizard() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('wizard').style.display = 'block';
+  current = 0;
+  answers = {};
+  render();
+}
+
+function saveCurrent() {
+  answers[current] = document.getElementById('stepInput').value;
+}
+
+function nextStep() {
+  saveCurrent();
+  if (current < steps.length - 1) {
+    current++;
+    render();
+  } else {
+    showResult();
+  }
+}
+
+function prevStep() {
+  saveCurrent();
+  if (current > 0) {
+    current--;
+    render();
+  }
+}
+
+// ===== 生成初稿 =====
+function showResult() {
+  var name = document.getElementById('productName').value.trim() || '（未命名产品）';
+  var head = '# ' + name + ' 竞品分析（初稿）\n\n';
+  var body = '';
+  var titles = [
+    '我要回答的问题',
+    '是不是真竞品',
+    '分析范围和深度',
+    '用户路径还原',
+    '灵魂4问（功能价值判断）',
+    '补场景',
+    '结论 + 对我的产品有什么用'
+  ];
+  for (var i = 0; i < steps.length; i++) {
+    var content = (answers[i] || '').trim();
+    body += '## ' + titles[i] + '\n';
+    body += (content || '（这里还没写）') + '\n\n';
+  }
+  document.getElementById('draftBox').innerHTML =
+    '<button class="copy-btn" onclick="copyDraft(this)">复制</button>' +
+    (head + body).replace(/\n/g, '<br>');
+  document.getElementById('wizard').style.display = 'none';
+  document.getElementById('result').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function copyDraft(btn) {
+  var name = document.getElementById('productName').value.trim() || '（未命名产品）';
+  var head = '# ' + name + ' 竞品分析（初稿）\n\n';
+  var body = '';
+  var titles = [
+    '我要回答的问题',
+    '是不是真竞品',
+    '分析范围和深度',
+    '用户路径还原',
+    '灵魂4问（功能价值判断）',
+    '补场景',
+    '结论 + 对我的产品有什么用'
+  ];
+  for (var i = 0; i < steps.length; i++) {
+    var content = (answers[i] || '').trim();
+    body += '## ' + titles[i] + '\n' + (content || '（这里还没写）') + '\n\n';
+  }
+  navigator.clipboard.writeText(head + body).then(function() {
+    btn.textContent = '已复制 ✓';
+    btn.classList.add('copied');
+    setTimeout(function() { btn.textContent = '复制'; btn.classList.remove('copied'); }, 1500);
+  });
+}
+
+function restart() {
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('intro').style.display = 'block';
+  document.getElementById('wizard').style.display = 'none';
+  document.getElementById('productName').value = '';
+}
+</script>
+</body>
+</html>

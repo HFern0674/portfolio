@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 产品经理作品集</title>
+<style>
+  :root {
+    --primary: #5b6cff;
+    --primary-dark: #4455d9;
+    --bg: #f6f7fb;
+    --card: #ffffff;
+    --text: #2b2f3a;
+    --text-light: #6b7180;
+    --border: #e6e8f0;
+    --accent: #ff7a59;
+    --green: #2eb872;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+  }
+
+  /* 顶部 */
+  .hero {
+    background: linear-gradient(135deg, #5b6cff 0%, #7b5bff 100%);
+    color: #fff;
+    padding: 64px 24px 56px;
+    text-align: center;
+  }
+  .hero h1 { font-size: 30px; font-weight: 700; letter-spacing: 2px; }
+  .hero .role { margin-top: 10px; font-size: 16px; opacity: 0.95; }
+  .hero .tagline {
+    margin: 22px auto 0;
+    max-width: 560px;
+    font-size: 14px;
+    line-height: 1.9;
+    opacity: 0.9;
+  }
+
+  .container { max-width: 800px; margin: 0 auto; padding: 0 20px; }
+
+  /* 通用板块 */
+  section { padding: 48px 0 8px; }
+  .section-title {
+    font-size: 22px;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .section-sub { text-align: center; font-size: 13px; color: var(--text-light); margin-bottom: 26px; }
+
+  .card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 28px 26px;
+    box-shadow: 0 8px 30px rgba(43,47,58,0.07);
+    margin-bottom: 20px;
+  }
+
+  /* 关于我 */
+  #about .intro { font-size: 15px; color: var(--text); }
+  #about .intro p { margin-bottom: 10px; }
+
+  /* 分析卡片 */
+  .analysis-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .analysis-no {
+    flex-shrink: 0;
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    background: var(--primary);
+    color: #fff;
+    font-weight: 700;
+    font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .analysis-name { font-size: 19px; font-weight: 700; }
+  .analysis-name small { display: block; font-size: 12.5px; color: var(--text-light); font-weight: 400; margin-top: 2px; }
+
+  .verdict {
+    background: #f0f1ff;
+    border-left: 3px solid var(--primary);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 15.5px;
+    font-weight: 600;
+    margin: 14px 0 18px;
+  }
+  .verdict .lbl { display: block; font-size: 12px; color: var(--primary-dark); font-weight: 700; letter-spacing: 1px; margin-bottom: 4px; }
+
+  .finding { margin-bottom: 12px; padding-left: 2px; }
+  .finding b { color: var(--text); }
+  .finding p { font-size: 14px; color: var(--text); margin-top: 2px; }
+
+  .tags { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag {
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: #f0f1ff;
+    color: var(--primary-dark);
+    font-weight: 600;
+  }
+  .tag.warm { background: #fff4e8; color: #d97706; }
+
+  .legend { text-align: center; font-size: 12.5px; color: var(--text-light); margin-bottom: 18px; }
+  .legend span { margin: 0 10px; }
+  .legend .dot { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: middle; }
+  .legend .dot.blue { background: var(--primary); }
+  .legend .dot.warm { background: #d97706; }
+
+  /* 工具板块 */
+  #tool .card { text-align: center; }
+  #tool .tool-name { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+  #tool .tool-desc { font-size: 14.5px; color: var(--text); max-width: 560px; margin: 0 auto 22px; }
+  .btn {
+    display: inline-block;
+    padding: 13px 32px;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 2px;
+    text-decoration: none;
+    transition: background .2s;
+  }
+  .btn:hover { background: var(--primary-dark); }
+
+  /* 方法论 */
+  .method-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  @media (max-width: 640px) { .method-grid { grid-template-columns: 1fr; } }
+  .method-item {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 18px 18px;
+    box-shadow: 0 6px 20px rgba(43,47,58,0.06);
+  }
+  .method-item h4 { font-size: 15px; font-weight: 700; color: var(--primary-dark); margin-bottom: 6px; }
+  .method-item .use { font-size: 12.5px; color: var(--text-light); margin-bottom: 6px; }
+  .method-item p { font-size: 13.5px; color: var(--text); }
+
+  /* 页脚 */
+  footer {
+    text-align: center;
+    padding: 40px 20px 60px;
+    color: var(--text-light);
+    font-size: 13px;
+  }
+  footer .contact { margin-bottom: 6px; color: var(--text); }
+</style>
+</head>
+<body>
+
+  <header class="hero">
+    <h1>黄桂芬</h1>
+    <div class="role">AI 产品经理 · 转行中</div>
+    <div class="tagline">心理学本科 · 2 年贴产品、贴用户的运营经验<br>独立完成 3 份 AI 产品分析，用 Claude Code 开发 1 个方法论工具</div>
+  </header>
+
+  <div class="container">
+
+    <!-- 关于我 -->
+    <section id="about">
+      <div class="card">
+        <h2 class="section-title">关于我</h2>
+        <div class="intro">
+          <p>心理学本科背景，做了 2 年最贴用户、贴产品的运营工作——直接接收用户反馈，理解用户为什么用、为什么流失。</p>
+          <p>2026 年决定转行 AI 产品经理，系统学习 AI 产品方法后，独立完成了 3 份 AI 产品分析，并把学到的分析方法总结归纳成一套自己的方法论，用 Claude Code 产品化成了一个工具。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 三份分析 -->
+    <section id="analyses">
+      <h2 class="section-title">我的产品分析</h2>
+      <p class="section-sub">3 份独立分析 · 每份都实际上手使用过产品</p>
+      <div class="legend"><span><i class="dot blue"></i>分析方法（框架）</span><span><i class="dot warm"></i>分析动作（重点）</span></div>
+
+      <!-- 分析1 秘塔 -->
+      <article class="card">
+        <div class="analysis-head">
+          <div class="analysis-no">1</div>
+          <div class="analysis-name">秘塔 AI 搜索<small>单产品深挖</small></div>
+        </div>
+        <div class="verdict">
+          <span class="lbl">核心结论</span>
+          AI 搜索的本质不是"搜索升级"，而是「交付单位」变了——从给链接，升级成了给答案。
+        </div>
+        <div class="finding">
+          <b>① 传统搜索是"搬运工"，AI 搜索是"内容生成器"</b>
+          <p>搜"高铁儿童票身高标准"，百度还给过时百科链接，秘塔直接告诉你新规已改为按年龄判定，并附来源。一个是搬运链接，一个是生成答案。</p>
+        </div>
+        <div class="finding">
+          <b>② 溯源引用是秘塔最大的差异化</b>
+          <p>每条回答的角标能点开看到出处原文。它的产品逻辑不是"我给你正确答案"，而是"我帮你找素材，你自己判断"。</p>
+        </div>
+        <div class="finding">
+          <b>③ 短板：新用户学习成本高</b>
+          <p>主页没有使用引导，我是截图问豆包才逐步搞懂 3 个模式的区别，还有回答中角标的含义、它和右侧来源的关系，以及怎么判断来源真假。很多新用户可能探索几次就流失了。</p>
+        </div>
+        <div class="tags">
+          <span class="tag">6 维框架</span>
+          <span class="tag warm">人机分工</span>
+          <span class="tag warm">效果评估</span>
+        </div>
+      </article>
+
+      <!-- 分析2 WPS vs 飞书 -->
+      <article class="card">
+        <div class="analysis-head">
+          <div class="analysis-no">2</div>
+          <div class="analysis-name">WPS AI vs 飞书智能助手<small>竞品对比</small></div>
+        </div>
+        <div class="verdict">
+          <span class="lbl">核心结论</span>
+          它们其实是"伪竞品"——一个做深文档，一个做顺协作，解决的不是同一件事。
+        </div>
+        <div class="finding">
+          <b>① 先搞清楚"用户任务"，再判断"谁是竞品"</b>
+          <p>WPS AI 是"文档生产力的 AI 升级"；飞书是"协作平台的 AI 助手"。场景和动机都不一样，不能因为"都带 AI、都面向办公"就默认是竞品。</p>
+        </div>
+        <div class="finding">
+          <b>② 谁更贴合工作流？飞书</b>
+          <p>会议纪要转待办、任务自动提醒、多维表格排期，这些解决的是真实协作痛点。但如果你是重度文档/PPT 生产者，WPS AI 的生成速度和深度明显更强——各自擅长不同的事。</p>
+        </div>
+        <div class="finding">
+          <b>③ 一个意外发现</b>
+          <p>我把自己的试用记录分别喂给两个产品的 AI，要求按 6 个维度整理：灵犀（WPS）能按我要求的维度分别精准归纳整理，Aily（飞书）只能简单归纳整理、文档里没有直接描述的维度它就无法归纳。同一个动作，无意中测出了两个产品理解信息的能力差异。</p>
+        </div>
+        <div class="tags">
+          <span class="tag">对照测试</span>
+          <span class="tag warm">竞品判断</span>
+        </div>
+      </article>
+
+      <!-- 分析3 淘宝 -->
+      <article class="card">
+        <div class="analysis-head">
+          <div class="analysis-no">3</div>
+          <div class="analysis-name">淘宝 AI 购物助手<small>AI 嵌入成熟产品</small></div>
+        </div>
+        <div class="verdict">
+          <span class="lbl">核心结论</span>
+          用户不会按产品设计去做，只会按自己的习惯去做。
+        </div>
+        <div class="finding">
+          <b>① 用"需求 3 问"检验，它目前不成立</b>
+          <p>真痛点？大部分人下单前心里已有目标。显优势？AI 推荐完我还得自己再核一遍，没省事。愿代办？涉及钱的事用户天然不信任 AI。三个都不够扎实。</p>
+        </div>
+        <div class="finding">
+          <b>② 功能覆盖"全链路"，用户只用到了"试穿"</b>
+          <p>它宣称覆盖"需求构思→选品→试穿→下单→售后"全链路，也确实都做了。但复盘我的真实购物路径，整条链路里只用到了"试穿"一个 AI 功能。</p>
+        </div>
+        <div class="finding">
+          <b>③ 入口不是问题，信任才是</b>
+          <p>AI 试穿的入口已经非常显眼（全部频道、明星视频、商品页都有），但年轻用户还是会忽略。因为不是"藏得深"，是"购物场景里根本不信任 AI，它也没真正帮到我"。</p>
+        </div>
+        <div class="tags">
+          <span class="tag">需求 3 问</span>
+          <span class="tag warm">用户路径还原</span>
+          <span class="tag">对照测试</span>
+          <span class="tag">灵魂 4 问</span>
+        </div>
+      </article>
+    </section>
+
+    <!-- 工具 -->
+    <section id="tool">
+      <h2 class="section-title">我的工具</h2>
+      <p class="section-sub">把分析方法论产品化 · Claude Code（Vibe Coding）独立开发</p>
+      <div class="card">
+        <div class="tool-name">产品分析向导</div>
+        <div class="tool-desc">给第一次做 AI 产品分析的人：7 步引导走完一次分析——想清问题 → 判断伪竞品 → 定范围深度 → 还原路径 → 灵魂 4 问 → 补场景 → 写结论。每步配真实案例 + 填空，最后自动生成一份分析初稿。</div>
+        <a class="btn" href="tool.html">打开工具体验 →</a>
+      </div>
+    </section>
+
+    <!-- 方法论 -->
+    <section id="method">
+      <h2 class="section-title">我沉淀的分析方法</h2>
+      <p class="section-sub">学来的方法，内化总结成自己的分析流程</p>
+      <div class="method-grid">
+        <div class="method-item">
+          <h4>6 维框架</h4>
+          <div class="use">用来拆解一个产品</div>
+          <p>用户任务 / AI 能力 / 用户路径 / 人机分工 / 效果评估 / 成本风险</p>
+        </div>
+        <div class="method-item">
+          <h4>需求 3 问</h4>
+          <div class="use">用来验证产品是否成立</div>
+          <p>真痛点 / 显优势 / 愿代办</p>
+        </div>
+        <div class="method-item">
+          <h4>灵魂 4 问</h4>
+          <div class="use">用来单产品深挖</div>
+          <p>功能是干什么的 / 没有它我怎么做 / 有了它什么区别 / 我会替代老办法吗</p>
+        </div>
+        <div class="method-item">
+          <h4>对照测试</h4>
+          <div class="use">用来找 AI 的真实价值</div>
+          <p>AI 方案 vs 用户原有习惯，看它到底省不省事、省不省心</p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    <div class="contact">邮箱：huangguifen2021@163.com</div>
+    <div>本作品集与简历配套使用 · 三个分析均有完整版与面试讲述版，可随时提供</div>
+  </footer>
+
+</body>
+</html>
